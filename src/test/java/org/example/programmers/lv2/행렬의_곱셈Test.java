@@ -48,4 +48,24 @@ class 행렬의_곱셈Test {
         };
         assertArrayEquals(result, 행렬의_곱셈.solution(arr1, arr2));
     }
+
+    @Test
+    void test3() {
+        행렬의_곱셈 행렬의_곱셈 = new 행렬의_곱셈();
+        int[][] arr1 = {
+                {1, 2, 3},
+                {4, 5, 6}
+        };
+        int[][] arr2 = {
+                {1, 4},
+                {2, 5},
+                {3, 6}
+        };
+
+        int[][] result = {
+                {14, 32},
+                {32, 77}
+        };
+        assertArrayEquals(result, 행렬의_곱셈.solution(arr1, arr2));
+    }
 }
