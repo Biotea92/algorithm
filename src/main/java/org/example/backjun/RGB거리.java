@@ -22,9 +22,10 @@ public class RGB거리 {
 
     */
     public int solution(int[][] arr) {
-        int[][] dp = new int[arr.length + 1][3];
+        int n = arr.length;
+        int[][] dp = new int[n + 1][3];
 
-        for (int i = 1; i <= arr.length; i++) {
+        for (int i = 1; i <= n; i++) {
             int R = arr[i - 1][0];
             int G = arr[i - 1][1];
             int B = arr[i - 1][2];
@@ -33,6 +34,6 @@ public class RGB거리 {
             dp[i][1] = Math.min(dp[i - 1][0], dp[i - 1][2]) + G;
             dp[i][2] = Math.min(dp[i - 1][0], dp[i - 1][1]) + B;
         }
-        return Math.min(dp[arr.length][0], Math.min(dp[arr.length][1], dp[arr.length][2]));
+        return Math.min(dp[n][0], Math.min(dp[n][1], dp[n][2]));
     }
 }
