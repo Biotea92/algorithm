@@ -14,14 +14,17 @@ public class 부분_집합의_합 {
 */
 
     public int solution(int N, int K) {
+        if (N >= K) {
+            N = K;
+        }
         int[][] dp  = new int[N + 1][K + 1];
         dp[0][0] = 1;
 
-        for (int i = 1; i <= N; i++) {
-            for (int j = 0; j <= K; j++) {
-                dp[i][j] = dp[i - 1][j];
-                if (j - i >= 0) {
-                    dp[i][j] += dp[i - 1][j - i];
+        for (int n = 1; n <= N; n++) {
+            for (int k = 0; k <= K; k++) {
+                dp[n][k] = dp[n - 1][k];
+                if (k - n >= 0) {
+                    dp[n][k] += dp[n - 1][k - n];
                 }
             }
         }
