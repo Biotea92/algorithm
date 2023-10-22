@@ -1,7 +1,6 @@
 package org.example.backjun;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 
 public class 펠린드롬_만들기 {
 /*
@@ -22,30 +21,32 @@ public class 펠린드롬_만들기 {
 
 */
 
+    private static int[][] dp;
+    private static int[] arr;
+
     public int solution(int[] arr) {
+        this.arr = arr;
         int n = arr.length;
-        int[][] dp = new int[n + 1][n + 1];
+        dp = new int[n + 1][n + 1];
+
         for (int i = 0; i < dp.length; i++) {
             Arrays.fill(dp[i], -1);
         }
 
-        return dps(dp, arr, 0, n - 1);
+        return solve(0, n - 1);
     }
 
-    public int dps(int[][] dp, int[] arr, int left, int right) {
+    public int solve(int left, int right) {
         if (left >= right)
             return 0;
         if (dp[left][right] != -1)
             return dp[left][right];
 
-        int min = 0;
         if (arr[left] == arr[right]) {
-            min = dps(dp, arr, left + 1, right - 1);
-        } else {
-            min = dps(dp, arr, left + 1, right) + 1;
-            min = Math.min(min, dps(dp, arr, left, right - 1) + 1);
+            return dp[left][right] = solve(left + 1, right - 1);
         }
-        dp[left][right] = min;
-        return min;
+        int leftMin = solve(left + 1, right) + 1;
+        int rightMin = solve(left, right - 1) + 1;
+        return dp[left][right] = Math.min(leftMin, rightMin);
     }
 }
