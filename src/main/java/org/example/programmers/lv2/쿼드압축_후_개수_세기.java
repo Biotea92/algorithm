@@ -2,147 +2,72 @@ package org.example.programmers.lv2;
 
 public class 쿼드압축_후_개수_세기 {
 
-    private static int[] answer = new int[2];
+    private final int[] answer = new int[2];
     private final int ZERO = 0;
     private final int ONE = 1;
 
     public int[] solution(int[][] arr) {
-        if (!checkSameNumber(arr))
-            split(arr);
+        dfs(arr);
         return answer;
     }
 
-    private boolean checkSameNumber(int[][] arr) {
-        int countZero = 0;
-        int countOne = 0;
-        for (int[] ints : arr) {
-            for (int anInt : ints) {
-                if (anInt == ZERO) {
-                    countZero++;
-                } else {
-                    countOne++;
-                }
-            }
-        }
-        if (countZero == 0) {
-            answer[ONE]++;
-            return true;
-        } else if (countOne == 0) {
-            answer[ZERO]++;
-            return true;
-        }
-        return false;
-    }
-
-    public void split(int[][] arr) {
+    public void dfs(int[][] arr) {
         int length = arr.length;
-        int dividedLength = length / 2;
-        if (dividedLength == 1) {
-            count(arr);
+        if (length == 1) {
+            answer[arr[0][0]] += 1;
             return;
         }
+        int divideLength = length / 2;
+        int checkNum = -1;
 
-        int[][] sectorA = new int[dividedLength][dividedLength];
-        int indexI = 0;
-        int indexJ = 0;
-        int countZero = 0;
-        int countOne = 0;
-        for (int i = 0; i < dividedLength; i++) {
-            indexJ = 0;
-            for (int j = 0; j < dividedLength; j++) {
-                sectorA[indexI][indexJ] = arr[i][j];
-                indexJ++;
-                if (arr[i][j] == ZERO) {
-                    countZero++;
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                int num = arr[i][j];
+                if (i == 0 && j == 0) {
+                    checkNum = num;
                 } else {
-                    countOne++;
-                }
-            }
-            indexI++;
-        }
+                    if (checkNum != num) {
+                        // 4등분 해서 dfs
+                        int[][] a = new int[divideLength][divideLength];
+                        int[][] b = new int[divideLength][divideLength];
+                        int[][] c = new int[divideLength][divideLength];
+                        int[][] d = new int[divideLength][divideLength];
 
-        count(countZero, countOne, sectorA);
+                        for (int k = 0; k < divideLength; k++) {
+                            for (int l = 0; l < divideLength; l++) {
+                                a[k][l] = arr[k][l];
+                            }
+                        }
 
-        int[][] sectorB = new int[dividedLength][dividedLength];
-        indexI = 0;
-        countZero = 0;
-        countOne = 0;
-        for (int i = 0; i < dividedLength; i++) {
-            indexJ = 0;
-            for (int j = dividedLength; j < length; j++) {
-                sectorB[indexI][indexJ] = arr[i][j];
-                indexJ++;
-                if (arr[i][j] == ZERO) {
-                    countZero++;
-                } else {
-                    countOne++;
-                }
-            }
-            indexI++;
-        }
+                        for (int k = 0; k < divideLength; k++) {
+                            for (int l = divideLength; l < length; l++) {
+                                b[k][l - divideLength] = arr[k][l];
+                            }
+                        }
 
-        count(countZero, countOne, sectorB);
+                        for (int k = divideLength; k < length; k++) {
+                            for (int l = 0; l < divideLength; l++) {
+                                c[k - divideLength][l] = arr[k][l];
+                            }
+                        }
 
-        int[][] sectorC = new int[dividedLength][dividedLength];
-        indexI = 0;
-        countZero = 0;
-        countOne = 0;
-        for (int i = dividedLength; i < length; i++) {
-            indexJ = 0;
-            for (int j = 0; j < dividedLength; j++) {
-                sectorC[indexI][indexJ] = arr[i][j];
-                indexJ++;
-                if (arr[i][j] == ZERO) {
-                    countZero++;
-                } else {
-                    countOne++;
-                }
-            }
-            indexI++;
-        }
+                        for (int k = divideLength; k < length; k++) {
+                            for (int l = divideLength; l < length; l++) {
+                                d[k - divideLength][l - divideLength] = arr[k][l];
+                            }
+                        }
 
-        count(countZero, countOne, sectorC);
+                        dfs(a);
+                        dfs(b);
+                        dfs(c);
+                        dfs(d);
 
-        int[][] sectorD = new int[dividedLength][dividedLength];
-        indexI = 0;
-        countZero = 0;
-        countOne = 0;
-        for (int i = dividedLength; i < length; i++) {
-            indexJ = 0;
-            for (int j = dividedLength; j < length; j++) {
-                sectorD[indexI][indexJ] = arr[i][j];
-                indexJ++;
-                if (arr[i][j] == ZERO) {
-                    countZero++;
-                } else {
-                    countOne++;
-                }
-            }
-            indexI++;
-        }
-
-        count(countZero, countOne, sectorD);
-    }
-
-    private void count(int countZero, int countOne, int[][] sector) {
-        if (countZero == 0) {
-            answer[ONE]++;
-        } else if (countOne == 0) {
-            answer[ZERO]++;
-        } else {
-            split(sector);
-        }
-    }
-
-    public void count(int[][] arr) {
-        for (int[] ints : arr) {
-            for (int anInt : ints) {
-                if (anInt == ZERO) {
-                    answer[ZERO]++;
-                } else {
-                    answer[ONE]++;
+                        return;
+                    }
                 }
             }
         }
+
+        answer[checkNum] += 1;
     }
 }
