@@ -22,7 +22,7 @@ public class RemoveNthNodeFromEndofList {
         int size = tmpList.size();
         tmpList.remove(size - n);
         if (tmpList.isEmpty())
-            return new ListNode();
+            return null;
         for (int i = 0; i < tmpList.size(); i++) {
             if (i == 0) {
                 head = new ListNode(tmpList.get(0));
