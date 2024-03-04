@@ -1,6 +1,5 @@
 package org.example.programmers.lv2;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,16 +9,17 @@ import java.util.stream.Collectors;
 public class 소수_찾기 {
 
     public int solution(String numbers) {
+        Set<Integer> primes = new HashSet<>();
         List<Integer> nums = numbers.chars()
                 .map(c -> c - '0')
                 .boxed()
                 .collect(Collectors.toList());
-        return getPrimes(0, nums).size();
+        getPrimes(0, nums, primes);
+        return primes.size();
     }
 
-    private Set<Integer> getPrimes(int acc, List<Integer> numbers) {
+    private void getPrimes(int acc, List<Integer> numbers, Set<Integer> primes) {
         // 종료 조건, 점화식
-        Set<Integer> primes = new HashSet<>();
         if (isPrime(acc))
             primes.add(acc);
 
@@ -27,9 +27,8 @@ public class 소수_찾기 {
             int nextAcc = acc * 10 + numbers.get(i);
             List<Integer> nextNumbers = new ArrayList<>(numbers);
             nextNumbers.remove(i);
-            primes.addAll(getPrimes(nextAcc, nextNumbers));
+            getPrimes(nextAcc, nextNumbers, primes);
         }
-        return primes;
     }
 
     private boolean isPrime(int n) {
