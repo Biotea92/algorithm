@@ -1,33 +1,32 @@
 package org.example.programmers.lv2;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class 소수_찾기 {
 
     public int solution(String numbers) {
         Set<Integer> primes = new HashSet<>();
-        List<Integer> nums = numbers.chars()
+        int[] nums = numbers.chars()
                 .map(c -> c - '0')
-                .boxed()
-                .collect(Collectors.toList());
-        getPrimes(0, nums, primes);
+                .toArray();
+        getPrimes(0, nums, new boolean[numbers.length()], primes);
         return primes.size();
     }
 
-    private void getPrimes(int acc, List<Integer> numbers, Set<Integer> primes) {
+    private void getPrimes(int acc, int[] numbers, boolean[] isUsed, Set<Integer> primes) {
         // 종료 조건, 점화식
         if (isPrime(acc))
             primes.add(acc);
 
-        for (int i = 0; i < numbers.size(); i++) {
-            int nextAcc = acc * 10 + numbers.get(i);
-            List<Integer> nextNumbers = new ArrayList<>(numbers);
-            nextNumbers.remove(i);
-            getPrimes(nextAcc, nextNumbers, primes);
+        for (int i = 0; i < numbers.length; i++) {
+            if (isUsed[i])
+                continue;
+            int nextAcc = acc * 10 + numbers[i];
+
+            isUsed[i] = true;
+            getPrimes(nextAcc, numbers, isUsed, primes);
+            isUsed[i] = false;
         }
     }
 
@@ -42,6 +41,4 @@ public class 소수_찾기 {
         }
         return true;
     }
-
-
 }
