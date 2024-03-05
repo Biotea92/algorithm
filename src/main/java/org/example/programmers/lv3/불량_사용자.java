@@ -4,55 +4,32 @@ import java.util.*;
 
 public class 불량_사용자 {
 
-    private Set<Set<String>> combinations = new HashSet<>();
+    private Set<Set<String>> banSet = new HashSet<>();
 
     public int solution(String[] user_id, String[] banned_id) {
-        Map<String, List<String>> banMatchingUserMap = getBanMatchingUserMap(user_id, banned_id);
-        findValidCombinations(new HashSet<>(), banMatchingUserMap, 0, banned_id);
-        return combinations.size();
+        String[][] bans = Arrays.stream(banned_id)
+                .map(banned -> banned.replace("*", "."))
+                .map(banned -> Arrays.stream(user_id)
+                        .filter(id -> id.matches(banned))
+                        .toArray(String[]::new))
+                .toArray(String[][]::new);
+        dfs(0, new HashSet<>(), bans);
+        return banSet.size();
     }
 
-    private Map<String, List<String>> getBanMatchingUserMap(String[] user_id, String[] banned_id) {
-        Map<String, List<String>> banMatchingUserMap = new HashMap<>();
-        for (String banId : banned_id) {
-            List<String> matchingUsers = new ArrayList<>();
-            for (String userId : user_id) {
-                if (banId.length() == userId.length() && isBannedId(banId, userId)) {
-                    matchingUsers.add(userId);
-                }
-            }
-            banMatchingUserMap.put(banId, matchingUsers);
-        }
-        return banMatchingUserMap;
-    }
-
-    private void findValidCombinations(Set<String> currentCombination, Map<String, List<String>> banMatchingUserMap, int index, String[] banned_id) {
-        if (index == banned_id.length) {
-            combinations.add(new HashSet<>(currentCombination));
+    private void dfs(int index, Set<String> banned, String[][] bans) {
+        if (index == bans.length) {
+            banSet.add(new HashSet<>(banned));
             return;
         }
 
-        String bannedId = banned_id[index];
-        List<String> matchingUsers = banMatchingUserMap.get(bannedId);
-        for (String user : matchingUsers) {
-            if (!currentCombination.contains(user)) {
-                currentCombination.add(user);
-                findValidCombinations(currentCombination, banMatchingUserMap, index + 1, banned_id);
-                currentCombination.remove(user);
+        for (String ban : bans[index]) {
+            if (banned.contains(ban)) {
+                continue;
             }
+            banned.add(ban);
+            dfs(index + 1, banned, bans);
+            banned.remove(ban);
         }
     }
-
-    private boolean isBannedId(String banId, String userId) {
-        for (int i = 0; i < banId.length(); i++) {
-            char c1 = banId.charAt(i);
-            char c2 = userId.charAt(i);
-            boolean isCharEquals = c1 == c2 || c1 == '*' || c2 == '*';
-            if (!isCharEquals) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 }
