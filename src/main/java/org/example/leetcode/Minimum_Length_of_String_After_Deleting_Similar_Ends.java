@@ -1,7 +1,5 @@
 package org.example.leetcode;
 
-import java.util.Arrays;
-
 public class Minimum_Length_of_String_After_Deleting_Similar_Ends {
 
 //
@@ -17,43 +15,21 @@ public class Minimum_Length_of_String_After_Deleting_Similar_Ends {
 //
 //    1 <= s.length <= 105
 //    s only consists of characters 'a', 'b', and 'c'.
-    private final static String NOT_MATCH_STR = "z";
 
     public int minimumLength(String s) {
-        String[] chars = s.split("");
-        reduce(chars, 0, chars.length - 1);
-        return Arrays.stream(chars)
-                .filter(c -> !c.equals(NOT_MATCH_STR))
-                .toArray()
-                .length;
-    }
-
-    public void reduce(String[] chars, int left, int right) {
-        if (left > right) {
-            return;
+        char[] ch = s.toCharArray();
+        int n = ch.length;
+        int i = 0;
+        int j = n - 1;
+        while (j > i) {
+            if (ch[i] != ch[j])
+                break;
+            char c = ch[i];
+            while (j >= i && ch[i] == c)
+                i++;
+            while (j >= i && ch[j] == c)
+                j--;
         }
-
-        if (chars[left].equals(chars[right])) {
-            String c = chars[left];
-            int leftTmp = -1;
-            for (int i = left; i < right; i++) {
-                if (chars[i].equals(c)) {
-                    leftTmp = i;
-                    chars[i] = NOT_MATCH_STR;
-                } else {
-                    break;
-                }
-            }
-            int rightTmp = -1;
-            for (int i = right; i > left; i--) {
-                if (chars[i].equals(c)) {
-                    rightTmp = i;
-                    chars[i] = NOT_MATCH_STR;
-                } else {
-                    break;
-                }
-            }
-            reduce(chars, leftTmp + 1, rightTmp - 1);
-        }
+        return j - i + 1;
     }
 }
