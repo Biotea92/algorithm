@@ -19,18 +19,15 @@ public class Linked_List_Cycle {
     pos is -1 or a valid index in the linked-list.
      */
     public boolean hasCycle(ListNode head) {
-        if (head == null) {
-            return false;
-        }
-        Set<ListNode> set = new HashSet<>();
-        set.add(head);
-        ListNode tmp = head;
-        while (tmp.next != null) {
-            tmp = tmp.next;
-            if (set.contains(tmp)) {
+        if(head == null) return false;
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast.next != null && fast.next.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast){
                 return true;
             }
-            set.add(tmp);
         }
         return false;
     }
