@@ -1,4 +1,4 @@
-package org.example.flab.pattern;
+package org.example.flab.pattern.singleton;
 
 import java.util.concurrent.atomic.AtomicLong;
 
